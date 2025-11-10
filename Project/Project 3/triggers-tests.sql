@@ -1,0 +1,18 @@
+INSERT INTO Prepare VALUES ('20240313004', 'Gudeg', 'STAFF-05', '0');
+INSERT INTO Prepare VALUES ('20240313004', 'Gudeg', 'STAFF-05', '1');
+DELETE FROM Prepare WHERE order_id ='20240313004';
+
+INSERT INTO Prepare VALUES ('20240313004', 'Gudeg', 'STAFF-05', '2');
+DELETE FROM Prepare WHERE order_id ='20240313004';
+
+INSERT INTO member VALUES ('12345678', 'aa', 'aa', '1/3/2024', '12:19:23');
+INSERT INTO Food_Order VALUES ('888888', '1/3/2024', '10:15:51', 'card', NULLIF('3742-8375-6443-8590', ''), NULLIF('americanexpress', ''), '4');
+INSERT INTO Ordered_By VALUES ('888888', '12345678');
+DELETE FROM Ordered_By WHERE order_id = '888888' AND member = '12345678';
+DELETE FROM Food_Order WHERE id = '888888';
+DELETE FROM Member WHERE phone = '12345678';
+
+INSERT INTO Food_Order VALUES ('1111', '8/11/2025', '14:00:00', 'cash', NULL, NULL, 30);
+INSERT INTO Prepare VALUES ('1111', 'Gudeg', 'STAFF-05', 4);
+DELETE FROM Food_Order WHERE id = '1111';
+DELETE FROM Prepare WHERE id = '1111';

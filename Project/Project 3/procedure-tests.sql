@@ -1,28 +1,27 @@
 CREATE TABLE IF NOT EXISTS temp_order (
-  date       DATE,
-  time       TIME,
-  order_id   VARCHAR(256),
-  payment    VARCHAR(10),
-  card       VARCHAR(256),
-  card_type  VARCHAR(256),
-  item       VARCHAR(256),
+  date        DATE,
+  time        TIME,
+  order_id    VARCHAR(256),
+  payment     VARCHAR(10),
+  card        VARCHAR(256),
+  card_type   VARCHAR(256),
+  item        VARCHAR(256),
   total_price NUMERIC,
-  phone      INTEGER,
-  firstname  VARCHAR(256),
-  lastname   VARCHAR(256),
-  staff      VARCHAR(256)
+  phone       INTEGER,
+  firstname   VARCHAR(256),
+  lastname    VARCHAR(256),
+  staff       VARCHAR(256)
 );
--- \copy temp_order FROM '/Users/opsimath/Downloads/IT5008/Project/csv/order.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
+-- \copy temp_order FROM 'order.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
+-- Note: replace order.csv with its actual file path and run the command above in PSQL Tool Workspace in pgAdmin
 DO $$
 DECLARE
-  cur CURSOR FOR 
-    SELECT * FROM temp_order LIMIT 100;
   rec RECORD;
+  counter INT := 0;
 BEGIN
-  OPEN cur;
+  FOR rec IN
+    SELECT * FROM temp_order ORDER BY ctid LIMIT 100
   LOOP
-    FETCH cur INTO rec;
-    EXIT WHEN NOT FOUND;
     CALL insert_order_item(
       rec.order_id,
       rec.date,
@@ -34,8 +33,9 @@ BEGIN
       rec.item,
       rec.staff
     );
+    counter := counter + 1;
+    RAISE NOTICE 'Processed: order_id = %', rec.order_id;
   END LOOP;
-  CLOSE cur;
+  RAISE NOTICE 'Complete: % rows in total', counter;
 END;
 $$ LANGUAGE plpgsql;
-DROP TABLE IF EXISTS temp_order;
